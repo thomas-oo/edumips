@@ -81,7 +81,7 @@ public class CPU {
 	private static CPU cpu;
 
 	/** Statistics */
-	private int cycles, instructions, RAWStalls;
+	private int cycles, instructions, RAWStalls, structuralStalls;
 
 	/** Static initializer */
 	static {
@@ -203,6 +203,10 @@ public class CPU {
 		return RAWStalls;
 	}
 
+	public int getStructualStalls() {
+		return structuralStalls;
+	}
+
 	/**
 	 * This method performs a single pipeline step
 	 * 
@@ -211,7 +215,7 @@ public class CPU {
 	public void step() throws IntegerOverflowException, AddressErrorException, HaltException,
 			IrregularWriteOperationException, StoppedCPUException, MemoryElementNotFoundException,
 			IrregularStringOfBitsException, TwosComplementSumException, SynchronousException,
-			BreakException {
+			BreakException, StructuralHazardException {
 		/*
 		 * The integer "breaking" is used to keep track of the BREAK instruction. When the BREAK
 		 * instruction enters ID, the BreakException is thrown. We continue the normal cpu step flow,
@@ -282,6 +286,10 @@ public class CPU {
 			// instruction from the symbol table.
 			currentPipeStatus = PipeStatus.IF;
 			if (status == CPUStatus.RUNNING) {
+				if (mem.getReadSemaphore() == 1) {
+					structuralStalls++;
+					throw new StructuralHazardException();
+				}
 				if (pipe.get(PipeStatus.IF) != null) {
 					try {
 						pipe.get(PipeStatus.IF).IF();
@@ -314,14 +322,19 @@ public class CPU {
 
 			// A J-Type instruction has just modified the Program Counter. We need to
 			// put in the IF state the instruction the PC points to
-			pipe.put(PipeStatus.IF, mem.getInstruction(pc));
+			if (mem.getReadSemaphore() == 1) {
+				// can't jump, just put a bubble in
+				structuralStalls++;
+				pipe.put(PipeStatus.IF, Instruction.buildInstruction("BUBBLE"));
+			} else {
+				pipe.put(PipeStatus.IF, mem.getInstruction(pc));
+				old_pc.writeDoubleWord((pc.getValue()));
+				pc.writeDoubleWord((pc.getValue()) + 4);
+			}
 			pipe.put(PipeStatus.EX, pipe.get(PipeStatus.ID));
 			pipe.put(PipeStatus.ID, Instruction.buildInstruction("BUBBLE"));
-			old_pc.writeDoubleWord((pc.getValue()));
-			pc.writeDoubleWord((pc.getValue()) + 4);
 			if (syncex != null)
 				throw new SynchronousException(syncex);
-
 		} catch (RAWException ex) {
 			if (currentPipeStatus == PipeStatus.ID)
 				pipe.put(PipeStatus.EX, Instruction.buildInstruction("BUBBLE"));
@@ -335,6 +348,12 @@ public class CPU {
 		} catch (HaltException ex) {
 			pipe.put(PipeStatus.WB, null);
 			throw ex;
+		} catch (StructuralHazardException ex) {
+			if (currentPipeStatus == PipeStatus.IF) {
+				pipe.put(PipeStatus.ID, Instruction.buildInstruction("BUBBLE"));
+			}
+		} finally {
+			mem.resetReadSemaphore();
 		}
 	}
 

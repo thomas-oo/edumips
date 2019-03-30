@@ -34,6 +34,7 @@ public class Memory {
 	// cancellabile?
 	private List<MemoryElement> cells;
 	private List<Instruction> instructions;
+	private int readSemaphore;
 
 	private Map<Integer, String> mem_comments;
 
@@ -108,7 +109,6 @@ public class Memory {
 
 		if (index >= CPU.DATALIMIT || index < 0 || address < 0)
 			throw new MemoryElementNotFoundException();
-
 		return cells.get(index);
 	}
 
@@ -163,5 +163,17 @@ public class Memory {
 		} catch (IndexOutOfBoundsException e) {
 			throw new HaltException();
 		}
+	}
+
+	public int getReadSemaphore() {
+		return readSemaphore;
+	}
+
+	public void setReadSemaphore() {
+		this.readSemaphore = 1;
+	}
+
+	public void resetReadSemaphore() {
+		this.readSemaphore = 0;
 	}
 }
