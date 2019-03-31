@@ -354,6 +354,22 @@ public class CPU {
 		}
 	}
 
+	private boolean doubleInstructionExists() {
+		PipeStatus[] stages = {PipeStatus.ID, PipeStatus.EX, PipeStatus.MEM, PipeStatus.WB};
+		for (PipeStatus stage : stages) {
+			Instruction stageInstruction = pipe.get(stage);
+			if (stageInstruction != null && isDoubleInstruction(stageInstruction)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean isDoubleInstruction(Instruction instruction) {
+		String name = instruction.getName();
+		return name.startsWith("D") && !name.equals("DIV") && !name.equals("DIVU");
+	}
+
 	/**
 	 * Gets the Program Counter register
 	 * 

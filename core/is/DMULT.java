@@ -68,8 +68,8 @@ class DMULT extends ALU_RType {
 		cpu.getHI().incrWriteSemaphore();
 	}
 
-	public void EX() throws IrregularStringOfBitsException, IntegerOverflowException,
-			TwosComplementSumException {
+	public void EX()
+			throws IrregularStringOfBitsException, IntegerOverflowException, TwosComplementSumException {
 
 		// getting values from temporary registers
 		boolean sign;
