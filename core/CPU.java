@@ -298,9 +298,16 @@ public class CPU {
 					}
 				}
 				pipe.put(PipeStatus.ID, pipe.get(PipeStatus.IF));
-				pipe.put(PipeStatus.IF, mem.getInstruction(pc));
-				old_pc.writeDoubleWord((pc.getValue()));
-				pc.writeDoubleWord((pc.getValue()) + 4);
+
+				// add Bubble instructions if there exists a D* instruction in the pipeline
+				Instruction nextInstruction = mem.getInstruction(pc);
+				if (isDoubleInstruction(nextInstruction) && doubleInstructionExists()) {
+					pipe.put(PipeStatus.IF, Instruction.buildInstruction("BUBBLE"));
+				} else {
+					pipe.put(PipeStatus.IF, nextInstruction);
+					old_pc.writeDoubleWord((pc.getValue()));
+					pc.writeDoubleWord((pc.getValue()) + 4);
+				}
 			} else {
 				pipe.put(PipeStatus.ID, Instruction.buildInstruction("BUBBLE"));
 			}
@@ -324,11 +331,16 @@ public class CPU {
 
 			// A J-Type instruction has just modified the Program Counter. We need to
 			// put in the IF state the instruction the PC points to
-			pipe.put(PipeStatus.IF, mem.getInstruction(pc));
+			Instruction nextInstruction = mem.getInstruction(pc);
+			if (isDoubleInstruction(nextInstruction) && doubleInstructionExists()) {
+				pipe.put(PipeStatus.IF, Instruction.buildInstruction("BUBBLE"));
+			} else {
+				pipe.put(PipeStatus.IF, nextInstruction);
+				old_pc.writeDoubleWord((pc.getValue()));
+				pc.writeDoubleWord((pc.getValue()) + 4);
+			}
 			pipe.put(PipeStatus.EX, pipe.get(PipeStatus.ID));
 			pipe.put(PipeStatus.ID, Instruction.buildInstruction("BUBBLE"));
-			old_pc.writeDoubleWord((pc.getValue()));
-			pc.writeDoubleWord((pc.getValue()) + 4);
 			if (syncex != null)
 				throw new SynchronousException(syncex);
 		} catch (RAWException ex) {
