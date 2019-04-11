@@ -95,7 +95,7 @@ public abstract class ALU_RType extends ALUInstructions {
     }
 
     public void WB() throws IrregularStringOfBitsException {
-        if (!enableForwarding)
+        if (!enableForwarding || partial)
             doWB();
     }
 

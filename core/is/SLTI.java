@@ -51,7 +51,7 @@ class SLTI extends ALU_IType {
             TR[RT_FIELD].writeDoubleWord(1);
         else
             TR[RT_FIELD].writeDoubleWord(0);
-        if (enableForwarding) {
+        if (enableForwarding && !partial) {
             doWB();
         }
 

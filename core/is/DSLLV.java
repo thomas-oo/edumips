@@ -68,7 +68,7 @@ public class DSLLV extends ALU_RType {
 		String target = buf.substring(shift_value);
 
 		TR[RD_FIELD].setBits(target, 0);
-		if (enableForwarding) {
+		if (enableForwarding && !partial) {
 			doWB();
 		}
 	}

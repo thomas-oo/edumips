@@ -51,7 +51,7 @@ public class XOR extends ALU_RType {
 
 		rd = InstructionsUtils.xorOperation(rs, rt);
 		TR[RD_FIELD].setBits(rd, 0);
-		if (enableForwarding) {
+		if (enableForwarding && !partial) {
 			doWB();
 		}
 

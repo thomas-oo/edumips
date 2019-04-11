@@ -60,7 +60,7 @@ class ADDIU extends ALU_IType {
 			filledOutputstring = filledOutputstring.charAt(0) + filledOutputstring;
 
 		TR[RT_FIELD].setBits(filledOutputstring, 0);
-		if (enableForwarding) {
+		if (enableForwarding && !partial) {
 			doWB();
 		}
 	}

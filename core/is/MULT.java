@@ -102,14 +102,14 @@ class MULT extends ALU_RType {
 			lo = lo.charAt(0) + lo;
 		}
 
-		if (enableForwarding) {
+		if (enableForwarding && !partial) {
 			doWB();
 		}
 	}
 
 
 	public void WB() throws IrregularStringOfBitsException {
-		if (!enableForwarding) {
+		if (!enableForwarding || partial) {
 			doWB();
 		}
 	}

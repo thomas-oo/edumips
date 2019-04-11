@@ -52,7 +52,7 @@ class DADDIU extends ALU_IType {
         // adding values without to control integer overflow
         long result = imm + rs;
         TR[RT_FIELD].writeDoubleWord(result);
-        if (enableForwarding) {
+        if (enableForwarding && !partial) {
             doWB();
         }
     }

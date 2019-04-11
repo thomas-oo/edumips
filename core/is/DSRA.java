@@ -77,7 +77,7 @@ public class DSRA extends ALU_RType {
             sb.append(c);
         sb.append(rt.substring(0, 64 - sa));
         TR[RD_FIELD].setBits(sb.substring(0), 0);
-        if (enableForwarding) {
+        if (enableForwarding && !partial) {
             doWB();
         }
     }

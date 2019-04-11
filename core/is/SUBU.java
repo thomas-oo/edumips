@@ -58,7 +58,7 @@ public class SUBU extends ALU_RType {
         for (int i = 0; i < 32; i++)
             filledOutputstring = outputstring.charAt(0) + filledOutputstring;
         TR[RD_FIELD].setBits(filledOutputstring, 0);
-        if (enableForwarding) {
+        if (enableForwarding && !partial) {
             doWB();
         }
 

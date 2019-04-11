@@ -54,7 +54,7 @@ class MOVZ extends ALU_RType {
         } else {
             skipWB = true;
         }
-        if (enableForwarding) {
+        if (enableForwarding && !partial) {
             doWB();
         }
 

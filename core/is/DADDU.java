@@ -56,7 +56,7 @@ public class DADDU extends ALU_RType {
         String outputstring = InstructionsUtils.twosComplementSum(rs, rt);
         // There isn't IntegerOverflow cases
         TR[RD_FIELD].setBits(outputstring, 0);
-        if (enableForwarding) {
+        if (enableForwarding && !partial) {
             doWB();
         }
     }

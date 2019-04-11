@@ -61,7 +61,7 @@ public class ADDU extends ALU_RType {
             filledOutputstring = filledOutputstring.charAt(0) + filledOutputstring;
 
         TR[RD_FIELD].setBits(filledOutputstring, 0);
-        if (enableForwarding) {
+        if (enableForwarding && !partial) {
             doWB();
         }
     }

@@ -60,7 +60,7 @@ public class AND extends ALU_RType {
         }
         // saving bitwise AND result into a temporary register
         TR[RD_FIELD].setBits(outputstring, 0);
-        if (enableForwarding) {
+        if (enableForwarding && !partial) {
             doWB();
         }
 

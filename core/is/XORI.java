@@ -83,7 +83,7 @@ class XORI extends ALU_IType {
             sb.append(result == true ? '1' : '0');
         }
         TR[RT_FIELD].setBits(sb.substring(0), 0);
-        if (enableForwarding) {
+        if (enableForwarding && !partial) {
             doWB();
         }
 

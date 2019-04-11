@@ -85,7 +85,7 @@ public class SLL extends ALU_RType {
         for (int i = 0; i < sa; i++)
             sb.append('0');
         TR[RD_FIELD].setBits(sb.substring(0), 0);
-        if (enableForwarding) {
+        if (enableForwarding && !partial) {
             doWB();
         }
     }

@@ -286,9 +286,9 @@ public class CPU {
 			// instruction from the symbol table.
 			currentPipeStatus = PipeStatus.IF;
 			if (status == CPUStatus.RUNNING) {
-				if (mem.getReadSemaphore() == 1) {
-					throw new StructuralHazardException();
-				}
+				// if (mem.getReadSemaphore() == 1) {
+				// throw new StructuralHazardException();
+				// }
 				if (pipe.get(PipeStatus.IF) != null) {
 					try {
 						pipe.get(PipeStatus.IF).IF();
@@ -312,9 +312,9 @@ public class CPU {
 			if (syncex != null)
 				throw new SynchronousException(syncex);
 		} catch (JumpException ex) {
-			if (mem.getReadSemaphore() == 1) {
-				throw new StructuralHazardException();
-			}
+			// if (mem.getReadSemaphore() == 1) {
+			// throw new StructuralHazardException();
+			// }
 			try {
 				if (pipe.get(PipeStatus.IF) != null) // rispetto a dimips scambia le load con le IF
 					pipe.get(PipeStatus.IF).IF();
@@ -344,11 +344,11 @@ public class CPU {
 		} catch (HaltException ex) {
 			pipe.put(PipeStatus.WB, null);
 			throw ex;
-		} catch (StructuralHazardException ex) {
-			if (currentPipeStatus == PipeStatus.IF) {
-				pipe.put(PipeStatus.ID, Instruction.buildInstruction("BUBBLE"));
-			}
-			structuralStalls++;
+			// } catch (StructuralHazardException ex) {
+			// if (currentPipeStatus == PipeStatus.IF) {
+			// pipe.put(PipeStatus.ID, Instruction.buildInstruction("BUBBLE"));
+			// }
+			// structuralStalls++;
 		} finally {
 			mem.resetReadSemaphore();
 		}

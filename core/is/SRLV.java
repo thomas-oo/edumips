@@ -68,7 +68,7 @@ public class SRLV extends ALU_RType {
 			sb.append('0');
 		sb.append(rt.substring(0, 32 - shift_value));
 		TR[RD_FIELD].setBits(sb.substring(0), 0);
-		if (enableForwarding) {
+		if (enableForwarding && !partial) {
 			doWB();
 		}
 	}

@@ -96,14 +96,14 @@ class MULTU extends ALU_RType {
 		for (int i = lo.length(); i < 64; i++)
 			lo = '0' + lo;
 
-		if (enableForwarding) {
+		if (enableForwarding && !partial) {
 			doWB();
 		}
 	}
 
 
 	public void WB() throws IrregularStringOfBitsException {
-		if (!enableForwarding) {
+		if (!enableForwarding || partial) {
 			doWB();
 		}
 	}

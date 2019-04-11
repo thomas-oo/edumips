@@ -83,7 +83,7 @@ class ANDI extends ALU_IType {
             sb.append(resbit == true ? '1' : '0');
         }
         TR[RT_FIELD].setBits(sb.substring(0), 0);
-        if (enableForwarding) {
+        if (enableForwarding && !partial) {
             doWB();
         }
 

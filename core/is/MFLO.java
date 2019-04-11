@@ -62,13 +62,13 @@ class MFLO extends ALU_RType {
 
     public void EX() throws IrregularStringOfBitsException, IntegerOverflowException,
             TwosComplementSumException {
-        if (enableForwarding) {
+        if (enableForwarding && !partial) {
             doWB();
         }
     }
 
     public void WB() throws IrregularStringOfBitsException {
-        if (!enableForwarding)
+        if (!enableForwarding || partial)
             doWB();
     }
 
